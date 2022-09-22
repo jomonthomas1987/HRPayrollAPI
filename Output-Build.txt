@@ -1,0 +1,4 @@
+﻿Build started...
+1>------ Build started: Project: HRPayrollAPI, Configuration: Debug Any CPU ------
+1>HRPayrollAPI -> D:\Users\Jomont\source\repos\HRPayrollAPI\HRPayrollAPI\bin\Debug\netcoreapp3.1\HRPayrollAPI.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
