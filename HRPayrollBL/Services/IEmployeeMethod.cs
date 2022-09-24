@@ -18,6 +18,7 @@ namespace HRPayrollBL.Services
         string GeneratePayrollForEmployee(int month, int year, int empId);
         List<EmployeePayrollMonthly> EmployePayrollReport();
         List<Employee> ViewAllEmployee();
+        List<EmployeePayroll> ViewAllEmployeePayroll();
 
     }
 }

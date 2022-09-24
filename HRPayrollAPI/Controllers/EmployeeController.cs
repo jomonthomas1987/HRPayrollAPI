@@ -43,10 +43,17 @@ namespace HRPayrollAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("ViewAllEmployee")]
+        [HttpGet("ViewAllEmployee")]
         public List<Employee> ViewEmployee()
         {
             return _employeeMethod.ViewAllEmployee();
+        }
+
+        [Authorize]
+        [HttpGet("ViewAllEmployeePayroll")]
+        public List<EmployeePayroll> ViewAllEmployeePayroll()
+        {
+            return _employeeMethod.ViewAllEmployeePayroll();
         }
 
         [Authorize]

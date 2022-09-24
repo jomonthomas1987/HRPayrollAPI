@@ -95,6 +95,22 @@ namespace HRPayrollBL.Services
             return objEmpPayroll;
         }
 
+        public List<EmployeePayroll> ViewAllEmployeePayroll()
+        {
+            List<EmployeePayroll> objEmpPayroll = new List<EmployeePayroll>();
+            try
+            { 
+            var emp = _dBContext.EmployeePayrolls.Where(s => s.Active == 1).ToList();
+
+                objEmpPayroll = emp;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return objEmpPayroll;
+        }
+
         public string UpdateEmployee(Employee objEmp)
         {
             try
@@ -108,7 +124,6 @@ namespace HRPayrollBL.Services
                     data.LastName = objEmp.LastName;
                     data.Address = objEmp.Address;
                     data.Email = objEmp.Email;
-                    data.Phone = objEmp.Phone;
                     data.Gender = objEmp.Gender;
                 }
                 _dBContext.SaveChanges();
@@ -135,9 +150,6 @@ namespace HRPayrollBL.Services
                     data.DeductionAmount = objEmpPayroll.DeductionAmount;
                     data.DeductionReason = objEmpPayroll.DeductionReason;
                     data.HRA = objEmpPayroll.HRA;
-                    data.SalaryId = objEmpPayroll.SalaryId;
-
-
                 }
                 _dBContext.SaveChanges();
             }
@@ -174,7 +186,6 @@ namespace HRPayrollBL.Services
                     em.HRA = e.HRA;
                     em.Id = e.Id;
                     em.Month = month;
-                    em.SalaryId = e.SalaryId;
                     em.UpdatedBy = e.UpdatedBy;
                     em.Year = year;
 
@@ -210,7 +221,6 @@ namespace HRPayrollBL.Services
                 em.HRA = e.HRA;
                 em.Id = e.Id;
                 em.Month = month;
-                em.SalaryId = e.SalaryId;
                 em.UpdatedBy = e.UpdatedBy;
                 em.Year = year;
                 _dBContext.SaveChanges();

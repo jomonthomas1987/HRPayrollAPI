@@ -7,7 +7,6 @@ namespace HRPayrollModel.Domain
 {
     public class EmployeePayroll: IEntityBase
     {
-        public int SalaryId { get; set; }
         public int EmployeeId { get; set; }
         public float Basicpay { get; set; }
         public float HRA { get; set; }

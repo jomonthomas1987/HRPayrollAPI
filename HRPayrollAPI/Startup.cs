@@ -40,7 +40,7 @@ namespace HRPayrollAPI
                 o.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddDbContext<PayrollDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
 
             services.AddIdentity<IdentityUser, IdentityRole>(option =>
@@ -117,6 +117,13 @@ namespace HRPayrollAPI
                 app.UseDeveloperExceptionPage();
                 
             }
+
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+
+            app.UseHttpsRedirection();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
