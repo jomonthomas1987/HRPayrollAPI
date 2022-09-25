@@ -92,7 +92,7 @@ namespace HRPayrollAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("EmployePayrollReport")]
+        [HttpGet("EmployePayrollReport")]
         public List<EmployeePayrollMonthly> EmployePayrollReport()
         {
             return _employeeMethod.EmployePayrollReport();

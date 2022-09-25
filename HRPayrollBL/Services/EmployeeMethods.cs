@@ -1,5 +1,6 @@
 ﻿using HRPayrollDBL.Infrastructure.DBRepository;
 using HRPayrollModel.Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,8 +100,21 @@ namespace HRPayrollBL.Services
         {
             List<EmployeePayroll> objEmpPayroll = new List<EmployeePayroll>();
             try
-            { 
-            var emp = _dBContext.EmployeePayrolls.Where(s => s.Active == 1).ToList();
+            {
+                //var emp = _dBContext.EmployeePayrolls.Where(s => s.Active == 1).ToList();
+                var emp = (from ep in _dBContext.EmployeePayrolls
+                           join e in _dBContext.Employees on ep.EmployeeId.ToString() equals e.Id
+                           where ep.Active == 1
+                           select new EmployeePayroll
+                           {
+                               EmployeeId = ep.EmployeeId,
+                               ConveyanceAllowance = ep.ConveyanceAllowance,
+                               Basicpay = ep.Basicpay,
+                               DeductionAmount = ep.DeductionAmount,
+                               DeductionReason = ep.DeductionReason,
+                               HRA = ep.HRA,
+                               EmployeeName = e.FirstName + " " + e.LastName
+                           }).ToList();
 
                 objEmpPayroll = emp;
             }
@@ -165,13 +179,22 @@ namespace HRPayrollBL.Services
 
             var allEmployeePayrollList = (from p in _dBContext.EmployeePayrolls
                                           where p.Active == 1
-                                          select p).ToList();
+                                          select new EmployeePayroll { 
+                                              Active = p.Active,
+                                              Basicpay = p.Basicpay,
+                                              ConveyanceAllowance = p.ConveyanceAllowance,
+                                              DeductionAmount = p.DeductionAmount,
+                                              DeductionReason = p.DeductionReason,
+                                              EmployeeId = p.EmployeeId,
+                                              HRA=p.HRA,
+                                              Id = p.Id
+                                          }).AsNoTracking().ToList();
 
             foreach (EmployeePayroll e in allEmployeePayrollList)
             {
                 var ep = (from p in _dBContext.EmployeePayrollMonthly
                                               where p.Active == 1 && p.Month == month && p.Year == year && p.EmployeeId == e.EmployeeId
-                                              select p).ToList();
+                                              select new { p.Active, p.Basicpay, p.ConveyanceAllowance, p.DeductionAmount, p.EmployeeId, p.HRA}).AsNoTracking().ToList();
                 if (ep.Count == 0)
                 {
                     EmployeePayrollMonthly em = new EmployeePayrollMonthly();
@@ -179,15 +202,13 @@ namespace HRPayrollBL.Services
                     em.Active = e.Active;
                     em.Basicpay = e.Basicpay;
                     em.ConveyanceAllowance = e.ConveyanceAllowance;
-                    em.CreatedBy = e.CreatedBy;
                     em.DeductionAmount = e.DeductionAmount;
                     em.DeductionReason = e.DeductionReason;
                     em.EmployeeId = e.EmployeeId;
                     em.HRA = e.HRA;
-                    em.Id = e.Id;
                     em.Month = month;
-                    em.UpdatedBy = e.UpdatedBy;
                     em.Year = year;
+                    em.Salary = e.Basicpay + e.ConveyanceAllowance + e.HRA - e.DeductionAmount;
 
                     _dBContext.EmployeePayrollMonthly.Add(em);
                 }
@@ -214,15 +235,13 @@ namespace HRPayrollBL.Services
                 em.Active = e.Active;
                 em.Basicpay = e.Basicpay;
                 em.ConveyanceAllowance = e.ConveyanceAllowance;
-                em.CreatedBy = e.CreatedBy;
                 em.DeductionAmount = e.DeductionAmount;
                 em.DeductionReason = e.DeductionReason;
                 em.EmployeeId = e.EmployeeId;
                 em.HRA = e.HRA;
-                em.Id = e.Id;
                 em.Month = month;
-                em.UpdatedBy = e.UpdatedBy;
                 em.Year = year;
+                em.Salary = e.Basicpay + e.ConveyanceAllowance + e.HRA - e.DeductionAmount;
                 _dBContext.SaveChanges();
 
                 _dBContext.EmployeePayrollMonthly.Add(em);
@@ -234,9 +253,26 @@ namespace HRPayrollBL.Services
 
         public List<EmployeePayrollMonthly> EmployePayrollReport()
         {
-            return (from p in _dBContext.EmployeePayrollMonthly
-                    where p.Active == 1
-                    select p).ToList();
+            //return (from p in _dBContext.EmployeePayrollMonthly
+            //        where p.Active == 1
+            //        select p).ToList();
+
+            return  (from ep in _dBContext.EmployeePayrollMonthly
+                     join e in _dBContext.Employees on ep.EmployeeId.ToString() equals e.Id
+             where ep.Active == 1
+             select new EmployeePayrollMonthly
+             {
+                 EmployeeId = ep.EmployeeId,
+                 ConveyanceAllowance = ep.ConveyanceAllowance,
+                 Basicpay = ep.Basicpay,
+                 DeductionAmount = ep.DeductionAmount,
+                 DeductionReason = ep.DeductionReason,
+                 HRA = ep.HRA,
+                 EmployeeName = e.FirstName + " " + e.LastName,
+                 Salary = ep.Salary,
+                 Year = ep.Year,
+                 Month = ep.Month
+             }).ToList();
         }
     }
 }

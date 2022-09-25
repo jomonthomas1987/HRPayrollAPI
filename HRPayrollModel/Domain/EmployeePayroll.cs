@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRPayrollModel.Domain
 {
-    public class EmployeePayroll: IEntityBase
+    public class EmployeePayroll
     {
         public int EmployeeId { get; set; }
+        [NotMapped]
+        public string EmployeeName { get; set; }
         public float Basicpay { get; set; }
         public float HRA { get; set; }
         public float ConveyanceAllowance { get; set; }
